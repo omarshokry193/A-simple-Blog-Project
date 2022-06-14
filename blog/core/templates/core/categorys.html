@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+{% block content %}
+{% if category_posts %}
+
+        <h1><p>{{ cats }}</p></h1>
+        <ul>
+        {% for post in category_posts %}
+            
+                <li class="list-group-item">
+                    <a href="{% url 'core:article-detail' post.pk %}">{{post.title}}</a> 
+                    {% if user.is_authenticated %}
+                        <small><a href="{% url 'core:edit_post' post.pk %}">(Edit)</a></small>
+                    {% endif %}
+                    <br>
+                    <small>By: {{post.author.first_name}} {{post.author.last_name}} - {{ post.post_date }}</small> <br>
+                    <strong>{{post.snippet}}</strong>
+                </li>
+            
+        {% endfor %}
+        </ul>
+
+{% else %}
+    <p class="alert alert-danger">Sorry, this page does not exist..</p>
+    <a class="btn btn-secondary" href="{% url 'core:home' %}">Back</a>
+
+{% endif %}
+{% endblock %}

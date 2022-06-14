@@ -1,0 +1,41 @@
+{% extends 'core/base.html' %}
+{% block title %}
+Delete Post!
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+  {% if user.id == post.author.id %}
+
+    <h1>Delete: {{ post.title }}</h1>
+
+    <br><br>
+
+
+
+    <br>
+
+    <div class="form-group">
+    <form method="POST">
+        {% csrf_token %}
+        <h4>Are you sure you want to delete {{ post.title }}?</h4>
+        <div class="alert alert-danger" role="alert">
+            This Can not Be Undone!
+          </div>
+        <br>
+        <br>
+        
+        <button class="btn btn-danger">Delete Post!</button> <a class="btn btn-success" href="{% url 'core:home' %}">Back</a>
+    </form>
+    </div>
+  {% else %}
+  <div class="alert alert-danger" role="alert">
+    <strong>You Can't Delete Post That is Not Yours!</strong> 
+  </div>
+  {% endif %}
+{% else %}
+    <div class="alert alert-danger" role="alert">
+      Please Login <a href="{% url 'login' %}" class="alert-link">Here</a>To Delete The Post.
+    </div>
+    
+{% endif %}
+{% endblock %}

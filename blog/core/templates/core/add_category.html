@@ -1,0 +1,22 @@
+{% extends 'core/base.html' %}
+{% block title %}
+Create a Category!
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+    <h1>Add Category!</h1>
+    <br><br>
+    <div class="form-group">
+    <form method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button class="btn btn-success">Add!</button>
+    </form>
+    </div>
+{% else %}
+    <div class="alert alert-danger" role="alert">
+       Please Login <a href="{% url 'login' %}" class="alert-link">Here</a>To Add Category.
+    </div>
+    <!-- <p class="alert alert-danger">Please Login To Create Posts!</p> -->
+{% endif %}
+{% endblock %}

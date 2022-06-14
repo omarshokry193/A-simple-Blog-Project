@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+{% if object_list %}
+    <h1><p>Posts!</p></h1>
+    <ul class="list-group">
+    {% for post in object_list %}
+        <li class="list-group-item">
+            <a href="{% url 'core:article-detail' post.pk %}">{{post.title}}</a> 
+            {% if user.is_authenticated %}
+                {% if user.id == post.author.id %}
+                    <small><a href="{% url 'core:edit_post' post.pk %}">(Edit)</a></small>
+
+                {% endif %}
+            {% endif %}
+            <a href="{% url 'core:category' post.category %}">
+                ( <span style="color:red;">{{ post.category }}</span> )</a>
+            <br>
+            <small>By: {{post.author.first_name}} {{post.author.last_name}} - {{ post.post_date }}</small> <br>
+            <strong>{{ post.snippet }}</strong>
+            <br>
+        </li>
+    {% endfor %}
+
+    </ul>
+{% else %}
+<div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">Sorry :(</h4>
+    <p>There is no posts for now, please wait for someone to post or <a href="{% url 'core:add_post' %}">Create one!</a></p>
+    <hr>
+    <p class="mb-0">Thanks for visitng us, have a nice day.</p>
+  </div>
+{% endif %}
+{% endblock %}

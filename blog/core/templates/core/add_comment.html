@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+{% block title %}
+Comment on a post!
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+    <h1>Add Comment!</h1>
+    <br><br> 
+    <div class="form-group">
+    <form method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button class="btn btn-success">Add!</button>
+    </form>
+    </div>
+    <script>
+        var name = "{{ user.first_name }} {{ user.last_name }}";
+        document.getElementById("name").value = name;
+      </script>
+{% else %}
+    <div class="alert alert-danger" role="alert">
+       Please Login <a href="{% url 'login' %}" class="alert-link">Here</a>To Comment on a Post.
+    </div>
+    <!-- <p class="alert alert-danger">Please Login To Create Posts!</p> -->
+{% endif %}
+{% endblock %}

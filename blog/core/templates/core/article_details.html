@@ -1,0 +1,110 @@
+{% extends 'core/home.html' %}
+{% block title %}
+{{ post.title }}
+{% endblock %}
+{% block content %}
+
+
+
+<h1>{{ post.title }}</h1>
+<small>By: {{ post.author.first_name }} {{ post.author.last_name }}</small><br>
+<hr>
+
+<br>
+{{ post.body}}
+<br>
+<br>
+<br>
+
+
+<!-- {% if user.is_authenticated %}
+    {% if user.id == post.author.id %}
+        <a class="btn btn-secondary" href="{% url 'core:home' %}">Back</a> 
+        <a href="{% url 'core:edit_post' post.pk %}" class="btn btn-info">Edit</a> 
+        <a href="{% url 'core:delete_post' post.pk %}" class="btn btn-danger">Delete</a>
+        
+    {% endif %} -->
+    
+{% endif %}
+{% if user.id != post.author.id %}
+  <div><!--style="display:inline-block" -->
+    <a class="btn btn-secondary" href="{% url 'core:home' %}">Back</a> 
+    <form action="{% url 'core:like_post' post.pk %}" method="POST" style="display:inline-block">
+        {% csrf_token %}
+        {% if liked %}
+            {% if user.is_authenticated %}
+                <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-danger" id="liveToastBtn">Unlike</button> {{ total_likes }} Likes
+            {% endif %}
+        {% else %}
+            {% if user.is_authenticated %}
+                <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary">Like</button> {{ total_likes }} Likes
+            {% else %}
+            <button type="button" class="btn btn-primary" id="liveToastBtn">Like</button> {{ total_likes }} Likes
+                <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;">
+                    <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+                      <div class="toast-header"style="background-color:rgb(255, 126, 126);">   
+                        <strong class="mr-auto" style="color:red;">Error</strong>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="toast-body" style="background-color:rgb(175, 175, 175)">
+                        You can't Like or Unlike, Please <a href="{% url 'login' %}" class="toast-link">sign in</a> or <a href="{% url 'register' %}"class="toast-link">register</a> first!
+                      </div>
+                    </div>
+                  </div>
+            {% endif %}
+
+        {% endif %}
+    </form>
+  </div>
+  <script>
+    document.getElementById("liveToastBtn").onclick = function() {
+      var toastElList = [].slice.call(document.querySelectorAll('#liveToast'))
+      var toastList = toastElList.map(function(toastEl) {
+        return new bootstrap.Toast(toastEl)
+      })
+      toastList.forEach(toast => toast.show())
+    }
+    </script>
+{% endif %}
+
+{% if user.id == post.author.id %}
+        <a class="btn btn-secondary" href="{% url 'core:home' %}">Back</a> 
+        <a href="{% url 'core:edit_post' post.pk %}" class="btn btn-info">Edit</a> 
+        <a href="{% url 'core:delete_post' post.pk %}" class="btn btn-danger">Delete</a>
+        <form action="{% url 'core:like_post' post.pk %}" method="POST" style="display:inline-block">
+          {% csrf_token %}
+          {% if liked %}
+                  <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-danger" id="liveToastBtn">Unlike</button> {{ total_likes }} Likes
+          {% else %}
+                  <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary">Like</button> {{ total_likes }} Likes
+          {% endif %}
+        </form>
+{% endif %}
+
+<br>
+<hr>
+<h1 class="container">Comments..</h1>
+
+<div class="container"style="padding-left: 70px;">
+  {% if not post.comments.all %}
+      No Comments Yet..
+      <a href="{% url 'core:add_comment' post.pk %}">Add One</a>
+  {% else %}
+  <br>
+  <a href="{% url 'core:add_comment' post.pk %}">Add Comment</a>
+  <br>
+  <br>
+      {% for comment in post.comments.all %}
+        <div>
+          <strong>{{comment.name}}</strong> - {{ comment.date_added }}
+          <br>
+          {{ comment.comment }}
+          <hr>
+          
+        </div>
+      {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

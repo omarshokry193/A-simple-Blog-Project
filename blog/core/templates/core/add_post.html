@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+{% block title %}
+Create a Post!
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+    <h1>Add Posts!</h1>
+    <br><br> 
+    <div class="form-group">
+    <form method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button class="btn btn-success">Create!</button>
+    </form>
+    </div>
+
+    <script>
+      var name = "{{ user.id }}";
+      document.getElementById("username").value = name;
+    </script>
+{% else %}
+    <div class="alert alert-danger" role="alert">
+       Please Login <a href="{% url 'login' %}" class="alert-link">Here</a>To Create Posts.
+    </div>
+    <!-- <p class="alert alert-danger">Please Login To Create Posts!</p> -->
+{% endif %}
+{% endblock %}
